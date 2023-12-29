@@ -1,0 +1,48 @@
+﻿<Window x:Class="PrintRemittanceWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PrintRemittanceWPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="390.55" Width="554.48" Loaded="Window_Loaded">
+    <Grid Margin="20">
+        <!-- Logo -->
+        <Image Source="/logo.png" HorizontalAlignment="Center" VerticalAlignment="Top" Width="100"/>
+
+        <!-- Header -->
+        <TextBlock Text="Your Header" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="20"/>
+
+        <!-- Doc Number -->
+        <TextBlock Text="Doc Number: XYZ123" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,50,0,0"/>
+
+        <!-- Name and Number -->
+        <StackPanel Orientation="Horizontal" Margin="0,80,0,0">
+            <TextBlock Text="Name: " VerticalAlignment="Center"/>
+            <TextBlock Text="John Doe" VerticalAlignment="Center"/>
+            <TextBlock Text="Date: " Margin="20,0,0,0" VerticalAlignment="Center"/>
+            <TextBlock Text="01/01/2023" VerticalAlignment="Center"/>
+            <TextBlock Text="Phone: " Margin="20,0,0,0" VerticalAlignment="Center"/>
+            <TextBlock Text="123-456-7890" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Entered Data (Example: 4 entries) -->
+        <StackPanel Margin="0,120,0,0" Orientation="Horizontal">
+            <TextBlock Text="Data1: " >
+                <TextBlock Text="Value1" HorizontalAlignment="Right" Width="100"/>
+            </TextBlock>
+
+            <TextBlock Text="Data2: " >
+                <TextBlock Text="Value2" HorizontalAlignment="Right" Width="100"/>
+            </TextBlock>
+
+            <TextBlock Text="Data3: ">
+                <TextBlock Text="Value3" HorizontalAlignment="Right" Width="100"/>
+            </TextBlock>
+
+            <TextBlock Text="Data4: " >
+                <TextBlock Text="Value4" HorizontalAlignment="Right" Width="100"/>
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+</Window>
