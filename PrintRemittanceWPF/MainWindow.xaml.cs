@@ -1,18 +1,12 @@
-﻿using Microsoft.Win32;
-using System.IO;
-using System.Printing;
-using System.Runtime.InteropServices.Marshalling;
-using System.Text;
+﻿using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace PrintRemittanceWPF
 {
@@ -34,7 +28,7 @@ namespace PrintRemittanceWPF
         }
 
 
-        private void PrintDocument()
+        private void PrintDocument1()
         {
             PrintDialog printDialog = new PrintDialog();
             if (printDialog.ShowDialog() == true)
@@ -164,17 +158,14 @@ namespace PrintRemittanceWPF
             // Set the default printer name
             printDialog.PrintQueue = new PrintQueue(printServer, defaultPrinter);
 
-            if (printDialog.ShowDialog() == true)
-            {
 
-                ScaleTransform scale = new ScaleTransform();
-                scale.ScaleX = 0.75; // Adjust this value as needed to fit your content
-                scale.ScaleY = 0.75;
+            ScaleTransform scale = new ScaleTransform();
+            scale.ScaleX = 0.75; // Adjust this value as needed to fit your content
+            scale.ScaleY = 0.75;
 
-                this.LayoutTransform = scale;
-                printDialog.PrintVisual(this, "Print Document");
-                this.LayoutTransform = null; // Reset the scale after printing
-            }
+            this.LayoutTransform = scale;
+            printDialog.PrintVisual(this, "Print Document");
+            this.LayoutTransform = null; // Reset the scale after printing
         }
 
         private void FindDefaultPrinter()
@@ -205,6 +196,9 @@ namespace PrintRemittanceWPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            PrintServer printServer = new PrintServer();
+            //gets the printers list 
+            PrintQueueCollection printQueues = printServer.GetPrintQueues();
             PrintVisual();
         }
     }
