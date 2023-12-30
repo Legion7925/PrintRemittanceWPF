@@ -10,12 +10,47 @@
 
   <ItemGroup>
     <None Remove="logo.png" />
+    <None Remove="Resources\Fonts\samim-font-v4.0.5\Farsi-Digits\Samim-Bold-FD.ttf" />
+    <None Remove="Resources\Fonts\samim-font-v4.0.5\Farsi-Digits\Samim-FD.ttf" />
+    <None Remove="Resources\Fonts\samim-font-v4.0.5\Farsi-Digits\Samim-Medium-FD.ttf" />
+    <None Remove="Resources\Fonts\samim-font-v4.0.5\Samim-Bold.ttf" />
+    <None Remove="Resources\Fonts\samim-font-v4.0.5\Samim-Medium.ttf" />
+    <None Remove="Resources\Fonts\samim-font-v4.0.5\Samim.ttf" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="logo.png">
+    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Mohsen.PersianDateControls" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PrintRemittance.Core\PrintRemittance.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Fonts\samim-font-v4.0.5\Farsi-Digits\Samim-Medium-FD.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Fonts\samim-font-v4.0.5\Farsi-Digits\Samim-Bold-FD.ttf" />
+    <Resource Include="Resources\Fonts\samim-font-v4.0.5\Farsi-Digits\Samim-FD.ttf" />
+    <Resource Include="Resources\Fonts\samim-font-v4.0.5\Samim-Bold.ttf" />
+    <Resource Include="Resources\Fonts\samim-font-v4.0.5\Samim-Medium.ttf" />
+    <Resource Include="Resources\Fonts\samim-font-v4.0.5\Samim.ttf" />
+    <Resource Include="Resources\Images\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
