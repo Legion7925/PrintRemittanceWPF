@@ -2,6 +2,7 @@
 using PrintRemittance.Core.Entities;
 using PrintRemittance.Core.Interfaces.Repositories;
 using PrintRemittance.Core.Models;
+using System.Reflection.Metadata.Ecma335;
 
 namespace PrintRemittance.Core.Repositories;
 
@@ -29,8 +30,16 @@ public class DocumentRepository : IDocumentsRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Document>> GetDocuments()
+    public async Task<IEnumerable<Document>> GetDocuments(GetDocumentsQueryParameter filter)
     {
-        return await _context.Documents.AsNoTracking().ToListAsync();
+        var documents =  _context.Documents.AsNoTracking().Where(r => r.CreatedDate.Date >= filter.StartDate.Date
+            && r.CreatedDate.Date <= filter.EndDate.Date);
+
+        if(!string.IsNullOrEmpty(filter.Destination))
+        {
+            documents = documents.Where(d => (d.Destination.ToLower()).Contains(filter.Destination.ToLower()));
+        }
+
+        return await documents.ToListAsync();
     }
 }
