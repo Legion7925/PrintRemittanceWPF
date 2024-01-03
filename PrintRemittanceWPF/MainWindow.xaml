@@ -118,16 +118,15 @@
                         <DataGrid x:Name="dgReport" AutoGenerateColumns="False" FlowDirection="RightToLeft" IsReadOnly="True">
 
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="ردیف"></DataGridTextColumn>
-                                <DataGridTextColumn Header="شماره حواله"></DataGridTextColumn>
-                                <DataGridTextColumn Header="ردیف"></DataGridTextColumn>
-                                <DataGridTextColumn Header="ردیف"></DataGridTextColumn>
-                                <DataGridTextColumn Header="ردیف"></DataGridTextColumn>
-                                <DataGridTextColumn Header="ردیف"></DataGridTextColumn>
-                                <DataGridTextColumn Header="ردیف"></DataGridTextColumn>
-                                <DataGridTextColumn Header="ردیف"></DataGridTextColumn>
-                                <DataGridTextColumn Header="ردیف"></DataGridTextColumn>
-                                <DataGridTemplateColumn Header="عملیات">
+                                <DataGridTextColumn Binding="{Binding Id}" Header="id" Visibility="Hidden"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding RemittanceNumber}" Header="شماره حواله"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding DriverName}" Header="نام راننده"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Destination}" Header="مقصد"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding FactoryName}" Header="مبدا"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Product}" Header="محصول"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding CarName}" Header="نوع کامیون"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding CreatedDate}" Header="زمان"></DataGridTextColumn>
+                                <!--<DataGridTemplateColumn Header="عملیات">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
@@ -142,7 +141,7 @@
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                                </DataGridTemplateColumn>-->
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
