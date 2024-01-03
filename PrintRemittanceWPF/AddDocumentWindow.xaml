@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PrintRemittanceWPF" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:persianDateControls="clr-namespace:Mohsen.PersianDateControls;assembly=Mohsen.PersianDateControls"
         mc:Ignorable="d"
-        Title="AddDocumentWindow" SizeToContent="WidthAndHeight" FontFamily="./Resources/Fonts/samim-font-v4.0.5/Farsi-Digits/#Samim FD"
+        Title="AddDocumentWindow" SizeToContent="WidthAndHeight" FontFamily="./Resources/Fonts/samim-font-v4.0.5/Farsi-Digits/#Samim FD" Loaded="Window_Loaded"
     FontSize="16" Background="White" WindowStyle="None" WindowStartupLocation="CenterScreen">
     <Grid Margin="20">
         <StackPanel>

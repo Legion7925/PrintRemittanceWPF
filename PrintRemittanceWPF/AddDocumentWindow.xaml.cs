@@ -24,6 +24,13 @@ namespace PrintRemittanceWPF
 
         private void btnPrintDocument_Click(object sender, RoutedEventArgs e)
         {
+            var isValid = ValidateInputs();
+            if (isValid is not true)
+            {
+                NotificationEventsManager.OnShowMessage("لطفا همه ی فیلد ها را پر کنید" , MessageTypeEnum.Warning);
+                return;
+            }
+
             var document = new AddDocumentModel
             {
                 CarName = txtCarType.Text,
@@ -37,7 +44,34 @@ namespace PrintRemittanceWPF
             };
             SavePrintedDocument(document);
             PrintVisual(document);
-            btnPrintDocument.IsEnabled = true; 
+            btnPrintDocument.IsEnabled = true;
+            ClearInputs();
+            CartableEventsManager.OnUpdateDocumentsDatagrid();
+            txtFactoryName.Focus();
+        }
+
+        private bool ValidateInputs()
+        {
+            if (string.IsNullOrEmpty(txtCarType.Text) ||
+                string.IsNullOrEmpty(txtRemittanceNumber.Text) ||
+                string.IsNullOrEmpty(txtDriverName.Text) ||
+                string.IsNullOrEmpty(txtFactoryName.Text) ||
+                string.IsNullOrEmpty(txtProduct.Text) ||
+                string.IsNullOrEmpty(txtDestination.Text))
+
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void ClearInputs()
+        {
+            txtCarType.Text =
+                txtDestination.Text =
+                txtDriverName.Text =
+                txtFactoryName.Text =
+                txtProduct.Text = txtRemittanceNumber.Text = string.Empty;
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -145,7 +179,7 @@ namespace PrintRemittanceWPF
         private void txtDestination_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-                btnPrintDocument.Focus();
+                btnPrintDocument_Click(null!, null!);
         }
 
         private void txtProduct_KeyDown(object sender, KeyEventArgs e)
@@ -161,5 +195,9 @@ namespace PrintRemittanceWPF
                 txtProduct.Focus();
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            txtFactoryName.Focus();
+        }
     }
 }

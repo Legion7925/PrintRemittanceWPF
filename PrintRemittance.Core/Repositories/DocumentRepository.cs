@@ -30,7 +30,7 @@ public class DocumentRepository : IDocumentsRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Document>> GetDocuments(GetDocumentsQueryParameter filter)
+    public async Task<IEnumerable<DocumentsResultModel>> GetDocuments(GetDocumentsQueryParameter filter)
     {
         var documents =  _context.Documents.AsNoTracking().Where(r => r.CreatedDate.Date >= filter.StartDate.Date
             && r.CreatedDate.Date <= filter.EndDate.Date);
@@ -40,6 +40,18 @@ public class DocumentRepository : IDocumentsRepository
             documents = documents.Where(d => (d.Destination.ToLower()).Contains(filter.Destination.ToLower()));
         }
 
-        return await documents.ToListAsync();
+        return await documents.Select(d=> new DocumentsResultModel
+        {
+            CarName = d.CarName,
+            CreatedDate= d.CreatedDate,
+            Destination = d.Destination,
+            DriverName = d.DriverName,
+            FactoryName = d.FactoryName,
+            Id = d.Id,
+            PrintNumber = d.PrintNumber,
+            Product = d.Product,
+            RemittanceNumber = d.RemittanceNumber,
+            
+        }).ToListAsync();
     }
 }

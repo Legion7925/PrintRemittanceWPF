@@ -1,5 +1,7 @@
 ﻿using PrintRemittance.Core.Entities;
+using PrintRemittance.Core.Exception;
 using PrintRemittance.Core.Interfaces.Repositories;
+using PrintRemittance.Core.Models;
 using PrintRemittanceWPF.Helper;
 using System.Windows;
 
@@ -20,37 +22,48 @@ namespace PrintRemittanceWPF
             this.documentsRepository = documentsRepository;
             dpFilterStart.SelectedDate = Mohsen.PersianDate.Today.AddDays(-3);
             dpFilterEnd.SelectedDate = Mohsen.PersianDate.Today;
+
+            CartableEventsManager.updateDocuments += GetReport;
+            NotificationEventsManager.showMessage += ShowSnackbarMessage;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
+            GetReport(null!, null!);
         }
 
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            await GetReport();
-        }
-
-        private Task GetReport()
+        private async void GetReport(object? sender, RoutedEventArgs e)
         {
             try
             {
-                var report = documentsRepository.GetDocuments(new PrintRemittance.Core.Models.GetDocumentsQueryParameter
+                _listReport = await documentsRepository.GetDocuments(new GetDocumentsQueryParameter
                 {
                     StartDate = dpFilterStart.SelectedDate.ToDateTime(),
                     EndDate = dpFilterEnd.SelectedDate.ToDateTime(),
                     Destination = txtDestination.Text
                 });
-                dgReport.ItemsSource = (System.Collections.IEnumerable)report;
+                if (_listReport.Any() is not true)
+                {
+                    ShowSnackbarMessage("داده ای برای نمایش وجود ندارد", MessageTypeEnum.Information);
+                    dgReport.ItemsSource = null;
+                    return;
+                }
+                dgReport.ItemsSource = _listReport;
+
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 ShowSnackbarMessage("در واکشی اطلاعات خطایی رخ داده است", MessageTypeEnum.Error);
+                Logger.LogException(ex);
             }
-
-            return Task.CompletedTask;
         }
+
+        private void btnReportRemitance_Click(object sender, RoutedEventArgs e)
+        {
+            GetReport(null, null!);
+        }
+
 
         private void btnAddDocument_Click(object sender, RoutedEventArgs e)
         {
@@ -88,41 +101,14 @@ namespace PrintRemittanceWPF
         private void btnReportRemoveFilter_Click(object sender, RoutedEventArgs e)
         {
             txtDestination.Text = string.Empty;
-            GetReport();
-        }
-
-        private void btnReportRemitance_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                _listReport = (IEnumerable<Document>)documentsRepository.GetDocuments(new PrintRemittance.Core.Models.GetDocumentsQueryParameter
-                {
-                    StartDate = dpFilterStart.SelectedDate.ToDateTime(),
-                    EndDate = dpFilterEnd.SelectedDate.ToDateTime(),
-                    Destination = txtDestination.Text
-                });
-                if (_listReport.Any())
-                {
-                    ShowSnackbarMessage("داده ای برای نمایش وجود ندارد", MessageTypeEnum.Information);
-                    dgReport.ItemsSource = null;
-                    return;
-                }
-                else
-                {
-                    dgReport.ItemsSource = _listReport;
-                }
-
-            }
-            catch (Exception)
-            {
-                ShowSnackbarMessage("در واکشی اطلاعات خطایی رخ داده است", MessageTypeEnum.Error);
-            }
+            GetReport(null!, null!);
         }
 
         private void btnEditRemitance_Click(object sender, RoutedEventArgs e)
         {
 
         }
+
         private void btnDeleteRemitance_Click(object sender, RoutedEventArgs e)
         {
 
@@ -150,6 +136,14 @@ namespace PrintRemittanceWPF
                 default:
                     snackBarInfo.MessageQueue?.Enqueue((string)sender, null, null, null, false, true, TimeSpan.FromSeconds(3));
                     break;
+            }
+        }
+
+        private void txtDestination_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter )
+            {
+                GetReport(null, null!);
             }
         }
     }
