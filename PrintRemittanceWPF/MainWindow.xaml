@@ -75,7 +75,7 @@
 
                         <StackPanel Grid.Column="0" Orientation="Horizontal" FlowDirection="RightToLeft">
                             <Button x:Name="btnAddDocument" Content="پرینت حواله" Background="#FF26A952" Foreground="White"
-                                Margin="0,0,20,0"></Button>
+                                Margin="0,0,20,0" Click="btnAddDocument_Click"></Button>
 
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Margin="10,7" Text="تاریخ شروع :" VerticalAlignment="Center"></TextBlock>
@@ -123,7 +123,7 @@
                                     <DataGridTextColumn Binding="{Binding FactoryName}" Header="مبدا"></DataGridTextColumn>
                                     <DataGridTextColumn Binding="{Binding Product}" Header="محصول"></DataGridTextColumn>
                                     <DataGridTextColumn Binding="{Binding CarName}" Header="نوع کامیون"></DataGridTextColumn>
-                                    <DataGridTextColumn Binding="{Binding CreatedDateFa}" Header="زمان"></DataGridTextColumn>
+                                    <DataGridTextColumn Binding="{Binding CreatedDateFa}" Header="تاریخ"></DataGridTextColumn>
                                     <!--<DataGridTemplateColumn Header="عملیات">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
