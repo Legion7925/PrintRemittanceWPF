@@ -22,7 +22,7 @@ namespace PrintRemittanceWPF
             this.documentsRepository = documentsRepository;
         }
 
-        private void btnPrintDocument_Click(object sender, RoutedEventArgs e)
+        private async void btnPrintDocument_Click(object sender, RoutedEventArgs e)
         {
             var isValid = ValidateInputs();
             if (isValid is not true)
@@ -42,7 +42,7 @@ namespace PrintRemittanceWPF
                 Product = txtProduct.Text,
                 RemittanceNumber = txtRemittanceNumber.Text,
             };
-            SavePrintedDocument(document);
+            await SavePrintedDocument(document);
             PrintVisual(document);
             btnPrintDocument.IsEnabled = true;
             ClearInputs();
@@ -138,11 +138,11 @@ namespace PrintRemittanceWPF
         /// <summary>
         /// ذخیره اطلاعات حواله پرینت شده داخل پایگاه داده
         /// </summary>
-        private void SavePrintedDocument(AddDocumentModel documentModel)
+        private async Task SavePrintedDocument(AddDocumentModel documentModel)
         {
             try
             {
-                documentsRepository.AddDocument(documentModel);
+                await documentsRepository.AddDocument(documentModel);
                 CartableEventsManager.OnUpdateDocumentsDatagrid();
             }
             catch (AppException ne)

@@ -75,7 +75,7 @@
 
                         <StackPanel Grid.Column="0" Orientation="Horizontal" FlowDirection="RightToLeft">
                             <Button x:Name="btnAddDocument" Content="پرینت حواله" Background="#FF26A952" Foreground="White"
-                                Margin="0,0,20,0" Click="btnAddDocument_Click"></Button>
+                                Margin="0,0,10,0" Click="btnAddDocument_Click"></Button>
 
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Margin="10,7" Text="تاریخ شروع :" VerticalAlignment="Center"></TextBlock>
