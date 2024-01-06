@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
@@ -30,6 +30,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PrintRemittance.Core\PrintRemittance.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ControlPlateText">
+      <HintPath>Ref\ControlPlateText.dll</HintPath>
+    </Reference>
+    <Reference Include="NGM_ANPR_Net5Core">
+      <HintPath>Ref\NGM_ANPR_Net5Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

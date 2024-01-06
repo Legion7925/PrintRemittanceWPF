@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PrintRemittanceWPF" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:persianDateControls="clr-namespace:Mohsen.PersianDateControls;assembly=Mohsen.PersianDateControls"
         mc:Ignorable="d"
         Title="MainWindow" Height="680" Width="1024" MinHeight="680" MinWidth="1064" WindowStartupLocation="CenterScreen" AllowsTransparency="True" ResizeMode="CanResizeWithGrip"
@@ -53,8 +53,6 @@
                 </Grid>
 
 
-
-
                 <Grid Grid.Row="1">
 
                     <Grid>
@@ -80,12 +78,12 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Margin="10,7" Text="تاریخ شروع :" VerticalAlignment="Center"></TextBlock>
                                 <persianDateControls:PersianDatePicker x:Name="dpFilterStart" BorderBrush="Gray" VerticalAlignment="Center"
-                                   Foreground="{DynamicResource MaterialDesignBody}"/>
+                                   Foreground="{DynamicResource MaterialDesignBody}" Height="30"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Margin="10,10" Text="تاریخ پایان :" VerticalAlignment="Center"></TextBlock>
                                 <persianDateControls:PersianDatePicker x:Name="dpFilterEnd" BorderBrush="Gray" VerticalAlignment="Center"
-                                   Foreground="{DynamicResource MaterialDesignBody}"/>
+                                   Foreground="{DynamicResource MaterialDesignBody}" Height="30"/>
                             </StackPanel>
 
 
@@ -113,18 +111,33 @@
                         <Border Grid.Row="1" Margin="0,0"  BorderThickness="0.75" BorderBrush="#FFDBDBDB"/>
 
                         <Grid Grid.Row="2">
-                            <DataGrid x:Name="dgReport" AutoGenerateColumns="False" FlowDirection="RightToLeft" IsReadOnly="True">
+                            <DataGrid x:Name="dgReport" AutoGenerateColumns="False" FlowDirection="RightToLeft" IsReadOnly="True"
+                                      SelectedCellsChanged="dgReport_SelectedCellsChanged">
 
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Id}" Header="id" Visibility="Hidden"></DataGridTextColumn>
-                                    <DataGridTextColumn Header="ردیف"></DataGridTextColumn>
-                                    <DataGridTextColumn Binding="{Binding RemittanceNumber}" Header="شماره حواله"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="ردیف" Binding="{Binding RowNumber}"></DataGridTextColumn>
+                                    <DataGridTemplateColumn Header="شماره پلاک">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal" >
+                                                        <Label Content="{Binding P4}"></Label>
+                                                        <Label Content="{Binding P3}"></Label>
+                                                        <Label Content="{Binding P2}"></Label>
+                                                        <Label Content="{Binding P1}"></Label>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
                                     <DataGridTextColumn Binding="{Binding DriverName}" Header="نام راننده"></DataGridTextColumn>
-                                    <DataGridTextColumn Binding="{Binding Destination}" Header="مقصد"></DataGridTextColumn>
                                     <DataGridTextColumn Binding="{Binding FactoryName}" Header="مبدا"></DataGridTextColumn>
+                                    <DataGridTextColumn Binding="{Binding Destination}" Header="مقصد"></DataGridTextColumn>
                                     <DataGridTextColumn Binding="{Binding Product}" Header="محصول"></DataGridTextColumn>
                                     <DataGridTextColumn Binding="{Binding CarName}" Header="نوع کامیون"></DataGridTextColumn>
                                     <DataGridTextColumn Binding="{Binding CreatedDateFa}" Header="تاریخ"></DataGridTextColumn>
+                                    <DataGridTextColumn Binding="{Binding PrintNumber}" Header="شماره حواله"></DataGridTextColumn>
                                     <DataGridTemplateColumn Header="عملیات">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>

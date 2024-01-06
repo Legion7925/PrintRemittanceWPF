@@ -14,7 +14,9 @@ namespace PrintRemittanceWPF
     {
         private readonly IDocumentsRepository documentsRepository;
 
-        private IEnumerable<Document> _listReport = new List<Document>();
+        private IEnumerable<DocumentsResultModel> _listReport = new List<DocumentsResultModel>();
+
+        private DocumentsResultModel selectedDocument = new();
 
         public MainWindow(IDocumentsRepository documentsRepository)
         {
@@ -26,7 +28,6 @@ namespace PrintRemittanceWPF
             CartableEventsManager.updateDocuments += GetReport;
             NotificationEventsManager.showMessage += ShowSnackbarMessage;
         }
-
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -63,7 +64,6 @@ namespace PrintRemittanceWPF
         {
             GetReport(null, null!);
         }
-
 
         private void btnAddDocument_Click(object sender, RoutedEventArgs e)
         {
@@ -106,7 +106,7 @@ namespace PrintRemittanceWPF
 
         private void btnDeleteRemitance_Click(object sender, RoutedEventArgs e)
         {
-            new DeleteDocumentWindow(documentsRepository).ShowDialog(); 
+            new DeleteDocumentWindow(documentsRepository, selectedDocument.Id).ShowDialog(); 
         }
 
         private void ShowSnackbarMessage(object? sender, MessageTypeEnum messageType)
@@ -144,7 +144,22 @@ namespace PrintRemittanceWPF
 
         private void btnPrintDocument_Click(object sender, RoutedEventArgs e)
         {
+            PrintManager.PrintVisual(new PrintDocumentModel
+            {
+                CarName = selectedDocument.CarName,
+                CreatedDate = selectedDocument.CreatedDate,
+                Destination = selectedDocument.Destination,
+                DriverName = selectedDocument.DriverName,
+                FactoryName = selectedDocument.DriverName,
+                Product = selectedDocument.Product,
+                PlateNumber = selectedDocument.PlateNumber
+            });
+        }
 
+        private void dgReport_SelectedCellsChanged(object sender, System.Windows.Controls.SelectedCellsChangedEventArgs e)
+        {
+            if(dgReport.SelectedItems.Count > 0)
+                selectedDocument = dgReport.SelectedItem as DocumentsResultModel ?? new DocumentsResultModel();
         }
     }
 }

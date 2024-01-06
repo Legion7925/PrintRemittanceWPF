@@ -1,4 +1,5 @@
-﻿using PrintRemittance.Core.Exception;
+﻿using ControlPlateText;
+using PrintRemittance.Core.Exception;
 using PrintRemittance.Core.Interfaces.Repositories;
 using PrintRemittance.Core.Models;
 using PrintRemittanceWPF.Helper;
@@ -22,12 +23,20 @@ namespace PrintRemittanceWPF
             this.documentsRepository = documentsRepository;
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            txtFactoryName.Focus();
+        }
+
+
         private async void btnPrintDocument_Click(object sender, RoutedEventArgs e)
         {
+            btnPrintDocument.IsEnabled = false;
             var isValid = ValidateInputs();
             if (isValid is not true)
             {
-                NotificationEventsManager.OnShowMessage("لطفا همه ی فیلد ها را پر کنید" , MessageTypeEnum.Warning);
+                NotificationEventsManager.OnShowMessage("لطفا همه ی فیلد ها را پر کنید", MessageTypeEnum.Warning);
+                btnPrintDocument.IsEnabled = true;
                 return;
             }
 
@@ -38,112 +47,30 @@ namespace PrintRemittanceWPF
                 Destination = txtDestination.Text,
                 DriverName = txtDriverName.Text,
                 FactoryName = txtFactoryName.Text,
-                PrintNumber = 1,//todo it should be auto increament
                 Product = txtProduct.Text,
-                RemittanceNumber = txtRemittanceNumber.Text,
+                PlateNumber = txtPlate.PlateText,
             };
-            await SavePrintedDocument(document);
-            PrintVisual(document);
-            btnPrintDocument.IsEnabled = true;
-            ClearInputs();
-            CartableEventsManager.OnUpdateDocumentsDatagrid();
-            txtFactoryName.Focus();
-        }
-
-        private bool ValidateInputs()
-        {
-            if (string.IsNullOrEmpty(txtCarType.Text) ||
-                string.IsNullOrEmpty(txtRemittanceNumber.Text) ||
-                string.IsNullOrEmpty(txtDriverName.Text) ||
-                string.IsNullOrEmpty(txtFactoryName.Text) ||
-                string.IsNullOrEmpty(txtProduct.Text) ||
-                string.IsNullOrEmpty(txtDestination.Text))
-
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private void ClearInputs()
-        {
-            txtCarType.Text =
-                txtDestination.Text =
-                txtDriverName.Text =
-                txtFactoryName.Text =
-                txtProduct.Text = txtRemittanceNumber.Text = string.Empty;
-        }
-
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        /// <summary>
-        /// پرینت یوزر کنترل طراحی شده و ارسال اطلاعات به یوزر کنترل
-        /// </summary>
-        private void PrintVisual(AddDocumentModel document)
-        {
-            btnPrintDocument.IsEnabled = false;
-
             try
             {
-                // Get the default print server
-                LocalPrintServer printServer = new LocalPrintServer();
-
-                // Get the default printer name
-                string defaultPrinter = printServer.DefaultPrintQueue.Name;
-                // Create a PrintDialog instance
-                PrintDialog printDialog = new PrintDialog();
-                if (printDialog.ShowDialog() == true)
+                var printNumber = await SavePrintedDocument(document);
+                var printModel = new PrintDocumentModel
                 {
-                    // Get the default print queue
-                    PrintQueue printQueue = LocalPrintServer.GetDefaultPrintQueue();
+                    CarName = txtCarType.Text,
+                    CreatedDate = dpDate.SelectedDate.ToDateTime(),
+                    Destination = txtDestination.Text,
+                    DriverName = txtDriverName.Text,
+                    FactoryName = txtFactoryName.Text,
+                    Product = txtProduct.Text,
+                    PlateNumber = txtPlate.PlateText,
+                    PrintNumber = printNumber
 
-                    // Get the print ticket for the print queue
-                    PrintTicket printTicket = printQueue.DefaultPrintTicket;
-
-
-                    // Set the paper size to A6
-                    printTicket.PageMediaSize = new PageMediaSize(4.13, 5.83);
-
-                    printDialog.PrintTicket = printTicket;
-
-
-                    // Update the print ticket for the print queue
-                    printQueue.UserPrintTicket = printTicket;
-                    // Set the default printer name
-                    printDialog.PrintQueue = new PrintQueue(printServer, defaultPrinter);
-
-
-                    ScaleTransform scale = new ScaleTransform();
-                    scale.ScaleX = 0.75; // Adjust this value as needed to fit your content
-                    scale.ScaleY = 0.75;
-
-                    this.LayoutTransform = scale;
-                    var printUC = new PrintUserControl(document);
-                    printDialog.PrintVisual(printUC, "Print Document");
-                    this.LayoutTransform = null; // Reset the scale after printing
-
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogException(ex);
-                NotificationEventsManager.OnShowMessage("در انجام عملیات پرینت خطایی رخ داده است", MessageTypeEnum.Error);
+                };//todo add auto mapper if this happened again
+                PrintManager.PrintVisual(printModel);
                 btnPrintDocument.IsEnabled = true;
-            }
-
-        }
-        /// <summary>
-        /// ذخیره اطلاعات حواله پرینت شده داخل پایگاه داده
-        /// </summary>
-        private async Task SavePrintedDocument(AddDocumentModel documentModel)
-        {
-            try
-            {
-                await documentsRepository.AddDocument(documentModel);
+                ClearInputs();
                 CartableEventsManager.OnUpdateDocumentsDatagrid();
+                txtFactoryName.Focus();
+
             }
             catch (AppException ne)
             {
@@ -156,12 +83,58 @@ namespace PrintRemittanceWPF
                 NotificationEventsManager.OnShowMessage("در انجام عملیات ثبت خطایی رخ داده است", MessageTypeEnum.Error);
                 btnPrintDocument.IsEnabled = true;
             }
+
+        }
+
+        private bool ValidateInputs()
+        {
+            if (string.IsNullOrEmpty(txtCarType.Text) ||
+                string.IsNullOrEmpty(txtPlate.PlateText) ||
+                string.IsNullOrEmpty(txtDriverName.Text) ||
+                string.IsNullOrEmpty(txtFactoryName.Text) ||
+                string.IsNullOrEmpty(txtProduct.Text) ||
+                string.IsNullOrEmpty(txtDestination.Text))
+
+            {
+                return false;
+            }
+            if (!ControlPlate.ControlPleat(txtPlate.PlateText))
+            {
+                MessageBox.Show("لطفا شماره پلاک را به درستی وارد کنید");
+                return false;
+            }
+            return true;
+        }
+
+        private void ClearInputs()
+        {
+            txtCarType.Text =
+                txtDestination.Text =
+                txtDriverName.Text =
+                txtFactoryName.Text =
+                txtProduct.Text = txtPlate.PlateText = string.Empty;
+            txtPlate.PlateText = "00ا00000";
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        /// <summary>
+        /// ذخیره اطلاعات حواله پرینت شده داخل پایگاه داده
+        /// </summary>
+        private async Task<string> SavePrintedDocument(AddDocumentModel documentModel)
+        {
+            var printNumber = await documentsRepository.AddDocument(documentModel);
+            CartableEventsManager.OnUpdateDocumentsDatagrid();
+            return printNumber;
         }
 
         private void txtCarType_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-                txtRemittanceNumber.Focus();
+                txtDriverName.Focus();
         }
 
         private void txtFactoryName_KeyDown(object sender, KeyEventArgs e)
@@ -179,25 +152,35 @@ namespace PrintRemittanceWPF
         private void txtDestination_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-                btnPrintDocument_Click(null!, null!);
+                txtProduct.Focus();
         }
 
-        private void txtProduct_KeyDown(object sender, KeyEventArgs e)
+        private void textBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                // Move focus to the next control
+                TraversalRequest request = new TraversalRequest(FocusNavigationDirection.Next);
+                ((UIElement)sender).MoveFocus(request);
+
+                // Select all text in the next TextBox
+                if (Keyboard.FocusedElement is TextBox textBox)
+                {
+                    textBox.SelectAll();
+                }
+            }
+        }
+
+        private void txtDriverName_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
                 txtDestination.Focus();
         }
 
-
-        private void txtDriverName_KeyDown(object sender, KeyEventArgs e)
+        private void txtPlate_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-                txtProduct.Focus();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            txtFactoryName.Focus();
+                txtFactoryName.Focus();
         }
     }
 }

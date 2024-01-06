@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrintRemittance.Core;
 
@@ -11,9 +12,11 @@ using PrintRemittance.Core;
 namespace PrintRemittance.Core.Migrations
 {
     [DbContext(typeof(PrintRemittanceDbContext))]
-    partial class PrintRemittanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240106140909_added_PlateNumber")]
+    partial class added_PlateNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,9 +54,8 @@ namespace PrintRemittance.Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PrintNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PrintNumber")
+                        .HasColumnType("int");
 
                     b.Property<string>("Product")
                         .IsRequired()

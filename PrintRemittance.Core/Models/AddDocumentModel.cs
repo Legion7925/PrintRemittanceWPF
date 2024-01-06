@@ -2,15 +2,13 @@
 
 public class AddDocumentModel
 {
-    public int PrintNumber { get; set; }
-
     public string FactoryName { get; set; } = string.Empty;
 
     public string CarName { get; set; } = string.Empty;
 
     public string Product { get; set; } = string.Empty;
 
-    public string RemittanceNumber { get; set; } = string.Empty;
+    public string PlateNumber { get; set; } = string.Empty;
 
     public string DriverName { get; set; } = string.Empty;
 

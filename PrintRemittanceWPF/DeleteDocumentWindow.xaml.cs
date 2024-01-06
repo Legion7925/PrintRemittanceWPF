@@ -22,10 +22,13 @@ namespace PrintRemittanceWPF
     public partial class DeleteDocumentWindow : Window
     {
         private readonly IDocumentsRepository documentsRepository;
-        public DeleteDocumentWindow(IDocumentsRepository documentsRepository)
+        private readonly Guid documentId;
+
+        public DeleteDocumentWindow(IDocumentsRepository documentsRepository , Guid documentId)
         {
             InitializeComponent();
             this.documentsRepository = documentsRepository;
+            this.documentId = documentId;
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -33,12 +36,14 @@ namespace PrintRemittanceWPF
             Close();
         }
 
-        private void btnSubmitDelete_Click(object sender, RoutedEventArgs e)
+        private async void btnSubmitDelete_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                //todo
+                await documentsRepository.DeleteDocument(documentId);
                 NotificationEventsManager.OnShowMessage("حواله مورد نظر با موفیت حذف شد", MessageTypeEnum.Success);
+                CartableEventsManager.OnUpdateDocumentsDatagrid();
+                this.Close();
             }
             catch (Exception ex)
             {
