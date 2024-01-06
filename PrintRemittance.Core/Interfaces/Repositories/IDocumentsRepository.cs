@@ -7,4 +7,5 @@ public interface IDocumentsRepository
 {
     Task<IEnumerable<DocumentsResultModel>> GetDocuments(GetDocumentsQueryParameter filter);
     Task AddDocument(AddDocumentModel document);
+    Task DeleteDocument(Guid documentId);
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PrintRemittance.Core.Entities;
+using PrintRemittance.Core.Exception;
 using PrintRemittance.Core.Interfaces.Repositories;
 using PrintRemittance.Core.Models;
 using System.Reflection.Metadata.Ecma335;
@@ -9,10 +10,12 @@ namespace PrintRemittance.Core.Repositories;
 public class DocumentRepository : IDocumentsRepository
 {
     private readonly PrintRemittanceDbContext _context;
+
     public DocumentRepository(PrintRemittanceDbContext context)
     {
         _context = context;
     }
+
     public async Task AddDocument(AddDocumentModel document)
     {
         await _context.AddAsync(new Document
@@ -28,6 +31,24 @@ public class DocumentRepository : IDocumentsRepository
             RemittanceNumber = document.RemittanceNumber,
         });
         await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteDocument(Guid documentId)
+    {
+        var document = GetDocumentById(documentId);
+
+        if(document is null)
+        {
+            throw new AppException("سند مورد نظر یافت نشد");
+        }
+
+        _context.Remove(document);
+        await _context.SaveChangesAsync();
+    }
+
+    private async Task<Document?> GetDocumentById(Guid documentId)
+    {
+        return await _context.Documents.FirstOrDefaultAsync(d=> d.Id == documentId);
     }
 
     public async Task<IEnumerable<DocumentsResultModel>> GetDocuments(GetDocumentsQueryParameter filter)

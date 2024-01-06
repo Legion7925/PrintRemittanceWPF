@@ -5,22 +5,27 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PrintRemittanceWPF"
              mc:Ignorable="d" 
-             Height="390.55" Width="554.48" FontFamily=".././Resources/Fonts/samim-font-v4.0.5/Farsi-Digits/#Samim FD"
-        FontSize="14" Background="White">
-    <Grid Margin="15">
+             Height="419.76" Width="297.36" FontFamily=".././Resources/Fonts/samim-font-v4.0.5/Farsi-Digits/#Samim FD"
+        FontSize="10" Background="White">
+    <Grid Margin="10,15">
         <StackPanel>
             <Grid>
-                <!-- Logo -->
-                <Image Source="/resources/images/logo.png" HorizontalAlignment="Center" VerticalAlignment="Top" Width="100" Margin="30,15,0,0"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
                 <!-- Header -->
-                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" >
-                    <TextBlock Text="شرکت حمل و نقل آرین محلات" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock Text="شماره ثبت 1127"  HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="1">
+                    <TextBlock Text="شرکت حمل و نقل آرین محلات" FontSize="11" FontWeight="Bold"/>
                     <StackPanel Margin="0,10,0,0">
-                        <TextBlock Text="حواله باربری" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
-                        <Separator  HorizontalAlignment="Center" BorderBrush="Black" BorderThickness="50"  Margin="0,0,0,0"/>
+                        <TextBlock Text="حواله باربری" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <Separator  HorizontalAlignment="Center" BorderBrush="Black" BorderThickness="40"  Margin="0,0,0,0"/>
                     </StackPanel>
+
+                     <!--Logo--> 
+                    <Image Source="/resources/images/logo.png" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120"  Margin="0,10,0,0"/>
+
                 </StackPanel>
 
                 <!-- Doc Number -->
@@ -34,7 +39,7 @@
                         <TextBlock x:Name="lblDate"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="تلفن نوبت دهی : " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0"/>
+                        <TextBlock Text="نوبت دهی : " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0"/>
                         <TextBlock Text="09923659983" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
@@ -45,31 +50,31 @@
                         <TextBlock Text="مدیریت : " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0"/>
                         <TextBlock Text="09188655001" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0"/>
                     </StackPanel>
-
+                    <TextBlock Text="شماره ثبت 1127"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0"/>
                 </StackPanel>
 
             </Grid>
             <Grid>
-                <StackPanel Margin="5,20" FlowDirection="RightToLeft">
+                <StackPanel Margin="0,20" FlowDirection="RightToLeft">
                     <StackPanel Orientation="Horizontal" Margin="0,10" >
-                        <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Text="معدن / کارخانه" VerticalAlignment="Center"></TextBlock>
-                        <TextBox x:Name="txtFactoryName"  Foreground="{DynamicResource MaterialDesignBody}" Width="111"  HorizontalContentAlignment="Center" Margin="10,0"></TextBox>
+                        <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Text="کارخانه" VerticalAlignment="Center"></TextBlock>
+                        <TextBox x:Name="txtFactoryName"  Foreground="{DynamicResource MaterialDesignBody}" Width="75"  HorizontalContentAlignment="Center" Margin="5,0"></TextBox>
                         <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Text="بدینوسیله کامیون" VerticalAlignment="Center"></TextBlock>
-                        <TextBox x:Name="txtCarType"  Foreground="{DynamicResource MaterialDesignBody}"  HorizontalContentAlignment="Center" Width="166" Margin="10,0"></TextBox>
+                        <TextBox x:Name="txtCarType"  Foreground="{DynamicResource MaterialDesignBody}"  HorizontalContentAlignment="Center" Width="90" Margin="5,0"></TextBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,10" >
                         <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Text="به شماره" VerticalAlignment="Center"></TextBlock>
-                        <TextBox x:Name="txtRemittanceNumber"  Foreground="{DynamicResource MaterialDesignBody}"  HorizontalContentAlignment="Center" Width="149" Margin="10,0"></TextBox>
+                        <TextBox x:Name="txtRemittanceNumber"  Foreground="{DynamicResource MaterialDesignBody}"  HorizontalContentAlignment="Center" Width="79" Margin="5,0"></TextBox>
                         <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Text="به رانندگی آقای" VerticalAlignment="Center"></TextBlock>
-                        <TextBox x:Name="txtDriverName" Foreground="{DynamicResource MaterialDesignBody}" Width="176"  HorizontalContentAlignment="Center" Margin="10,0"></TextBox>
+                        <TextBox x:Name="txtDriverName" Foreground="{DynamicResource MaterialDesignBody}" Width="89"  HorizontalContentAlignment="Center" Margin="5,0"></TextBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,10" >
                         <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Text="جهت حمل" VerticalAlignment="Center"></TextBlock>
-                        <TextBox x:Name="txtProduct"  Foreground="{DynamicResource MaterialDesignBody}" Width="129"  HorizontalContentAlignment="Center" Margin="10,0"></TextBox>
+                        <TextBox x:Name="txtProduct"  Foreground="{DynamicResource MaterialDesignBody}" Width="86"  HorizontalContentAlignment="Center" Margin="5,0"></TextBox>
                         <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Text="به مقصد" VerticalAlignment="Center"></TextBlock>
-                        <TextBox x:Name="txtDestination"  Foreground="{DynamicResource MaterialDesignBody}" Width="130" Margin="10,0"  HorizontalContentAlignment="Center"></TextBox>
-                        <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Text="معرفی میگردد" VerticalAlignment="Center"></TextBlock>
+                        <TextBox x:Name="txtDestination"  Foreground="{DynamicResource MaterialDesignBody}" Width="97" Margin="5,0"  HorizontalContentAlignment="Center"></TextBox>
                     </StackPanel>
+                    <!--<TextBlock Foreground="{DynamicResource MaterialDesignBody}" Text="معرفی میگردد" VerticalAlignment="Center"></TextBlock>-->
 
                 </StackPanel>
 

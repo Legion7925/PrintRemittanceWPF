@@ -105,7 +105,7 @@ namespace PrintRemittanceWPF
 
 
                     // Set the paper size to A6
-                    printTicket.PageMediaSize = new PageMediaSize(554.48, 390.55);
+                    printTicket.PageMediaSize = new PageMediaSize(4.13, 5.83);
 
                     printDialog.PrintTicket = printTicket;
 
