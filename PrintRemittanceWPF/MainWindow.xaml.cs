@@ -104,14 +104,9 @@ namespace PrintRemittanceWPF
             GetReport(null!, null!);
         }
 
-        private void btnEditRemitance_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void btnDeleteRemitance_Click(object sender, RoutedEventArgs e)
         {
-
+            new DeleteDocumentWindow(documentsRepository).ShowDialog(); 
         }
 
         private void ShowSnackbarMessage(object? sender, MessageTypeEnum messageType)
@@ -145,6 +140,11 @@ namespace PrintRemittanceWPF
             {
                 GetReport(null, null!);
             }
+        }
+
+        private void btnPrintDocument_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
