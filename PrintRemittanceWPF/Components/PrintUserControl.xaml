@@ -24,7 +24,7 @@
                     </StackPanel>
 
                      <!--Logo--> 
-                    <Image Source="/resources/images/logo.png" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120"  Margin="0,10,0,0"/>
+                    <Image x:Name="logo" HorizontalAlignment="Center" VerticalAlignment="Top" Width="120"  Margin="0,10,0,0"/>
 
                 </StackPanel>
 
