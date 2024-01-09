@@ -54,7 +54,12 @@ public class DocumentRepository : IDocumentsRepository
         return await _context.Documents.FirstOrDefaultAsync(d => d.Id == documentId);
     }
 
-    public async Task<IEnumerable<DocumentsResultModel>> GetDocuments(GetDocumentsQueryParameter filter)
+    public async Task<int> GetDocumentsCountAsync()
+    {
+        return await _context.Documents.CountAsync();
+    }
+
+    public async Task<IEnumerable<DocumentsResultModel>> GetDocumentsAsync(GetDocumentsQueryParameter filter)
     {
         var documents = _context.Documents.AsNoTracking().Where(r => r.CreatedDate.Date >= filter.StartDate.Date
             && r.CreatedDate.Date <= filter.EndDate.Date);

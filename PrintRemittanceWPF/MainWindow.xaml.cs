@@ -38,7 +38,7 @@ namespace PrintRemittanceWPF
         {
             try
             {
-                _listReport = await documentsRepository.GetDocuments(new GetDocumentsQueryParameter
+                _listReport = await documentsRepository.GetDocumentsAsync(new GetDocumentsQueryParameter
                 {
                     StartDate = dpFilterStart.SelectedDate.ToDateTime(),
                     EndDate = dpFilterEnd.SelectedDate.ToDateTime(),
@@ -144,7 +144,7 @@ namespace PrintRemittanceWPF
 
         private void btnPrintDocument_Click(object sender, RoutedEventArgs e)
         {
-            PrintManager.PrintVisualV2(new PrintDocumentModel
+            PrintManager.PrintVisual(new PrintDocumentModel
             {
                 CarName = selectedDocument.CarName,
                 CreatedDate = selectedDocument.CreatedDate,
