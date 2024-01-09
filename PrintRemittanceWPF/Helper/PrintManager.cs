@@ -72,9 +72,18 @@ public static class PrintManager
                 PrintQueue printQueue = printDialog.PrintQueue;
                 PrintCapabilities capabilities = printQueue.GetPrintCapabilities();
 
+                // Get the print ticket for the print queue
+                // Set the paper size to A6
+               // Update the print ticket for the print queue
+                PrintTicket printTicket = printQueue.DefaultPrintTicket;
+                printTicket.PageMediaSize = new PageMediaSize(PageMediaSizeName.ISOA6);
+                printDialog.PrintTicket = printTicket;
+                printQueue.UserPrintTicket = printTicket;
+
+
                 // Calculate the printable area size
-                double printableWidth = capabilities.PageImageableArea.ExtentWidth;
-                double printableHeight = capabilities.PageImageableArea.ExtentHeight;
+                double printableWidth = printTicket.PageMediaSize.Width.Value;
+                double printableHeight = printTicket.PageMediaSize.Height.Value;
 
                 // Create a FixedDocument for printing
                 FixedDocument fixedDocument = new FixedDocument();
@@ -93,6 +102,12 @@ public static class PrintManager
                 // Set UserControl dimensions to fit within the content area
                 userControl.Width = contentWidth;
                 userControl.Height = contentHeight;
+
+                // Calculate the position to center the UserControl
+                double left = (printableWidth - contentWidth) / 2;
+                double top = (printableHeight - contentHeight) / 2;
+                Canvas.SetLeft(userControl, left);
+                Canvas.SetTop(userControl, top);
 
                 // Add the UserControl to the FixedPage
                 fixedPage.Children.Add(userControl);
