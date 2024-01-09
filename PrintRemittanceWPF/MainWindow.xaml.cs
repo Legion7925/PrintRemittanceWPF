@@ -18,6 +18,11 @@ namespace PrintRemittanceWPF
 
         private DocumentsResultModel selectedDocument = new();
 
+        private int _pageSize = 5;
+        private int _pageIndex = 1;
+        private double _totalPages = 1;
+        private double _totalCount = 1;
+
         public MainWindow(IDocumentsRepository documentsRepository)
         {
             InitializeComponent();
@@ -34,6 +39,71 @@ namespace PrintRemittanceWPF
             GetReport(null!, null!);
         }
 
+        private async Task GetCountReport()
+        {
+            try
+            {
+                _totalCount = await documentsRepository.GetDocumentsCountAsync();
+                if (_totalCount == 0)
+                {
+                    ShowSnackbarMessage("داده ای برای نمایش وجود ندارد", MessageTypeEnum.Information);
+                    dgReport.ItemsSource = null;
+                    return;
+                }
+                btnFirstPage_Click(null!, null!);
+            }
+            catch (Exception ex)
+            {
+                ShowSnackbarMessage("در واکشی تعداد گزارش خطایی رخ داده است", MessageTypeEnum.Error);
+                Logger.LogException(ex);
+            }
+        }
+
+        private void FillDatagrid(object? sender, EventArgs? e)
+        {
+            _pageSize = Convert.ToInt32(cmbPaginationSize.SelectedValue);
+            _totalPages = Math.Ceiling(_totalCount / _pageSize);
+            if (_totalPages == 0)
+                _totalPages = 1;
+
+            GetReport(null!, null!);
+
+            if (_totalCount == 0)
+            {
+                btnLastPage.IsEnabled = false;
+                btnFirstPage.IsEnabled = false;
+                btnNextPage.IsEnabled = false;
+                btnPreviousPage.IsEnabled = false;
+            }
+            else
+            {
+                btnLastPage.IsEnabled = true;
+                btnFirstPage.IsEnabled = true;
+                btnNextPage.IsEnabled = true;
+                btnPreviousPage.IsEnabled = true;
+            }
+
+            if (_pageIndex == 1)
+            {
+                btnPreviousPage.IsEnabled = false;
+                btnFirstPage.IsEnabled = false;
+            }
+
+            if(_pageIndex == _totalPages)
+            {
+                btnLastPage.IsEnabled = false;
+                btnNextPage.IsEnabled = false;
+            }
+            else
+            {
+                btnLastPage.IsEnabled = true;
+                btnNextPage.IsEnabled = true;
+            }
+            lblTotalCount.Text = _totalCount.ToString();
+            lblPageNumber.Text = $"{((_pageIndex - 1) * _pageSize) + 1} - {((_pageIndex - 1) * _pageSize) + _listReport.Count()}";
+            dgReport.ItemsSource = _listReport;
+        }
+
         private async void GetReport(object? sender, RoutedEventArgs e)
         {
             try
@@ -43,6 +113,7 @@ namespace PrintRemittanceWPF
                     StartDate = dpFilterStart.SelectedDate.ToDateTime(),
                     EndDate = dpFilterEnd.SelectedDate.ToDateTime(),
                     Destination = txtDestination.Text
+                    //todo take skip pagination
                 });
                 if (_listReport.Any() is not true)
                 {
@@ -106,7 +177,7 @@ namespace PrintRemittanceWPF
 
         private void btnDeleteRemitance_Click(object sender, RoutedEventArgs e)
         {
-            new DeleteDocumentWindow(documentsRepository, selectedDocument.Id).ShowDialog(); 
+            new DeleteDocumentWindow(documentsRepository, selectedDocument.Id).ShowDialog();
         }
 
         private void ShowSnackbarMessage(object? sender, MessageTypeEnum messageType)
@@ -136,7 +207,7 @@ namespace PrintRemittanceWPF
 
         private void txtDestination_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (e.Key == System.Windows.Input.Key.Enter )
+            if (e.Key == System.Windows.Input.Key.Enter)
             {
                 GetReport(null, null!);
             }
@@ -158,8 +229,40 @@ namespace PrintRemittanceWPF
 
         private void dgReport_SelectedCellsChanged(object sender, System.Windows.Controls.SelectedCellsChangedEventArgs e)
         {
-            if(dgReport.SelectedItems.Count > 0)
+            if (dgReport.SelectedItems.Count > 0)
                 selectedDocument = dgReport.SelectedItem as DocumentsResultModel ?? new DocumentsResultModel();
+        }
+
+        private void btnNextPage_Click(object sender, RoutedEventArgs e)
+        {
+            _pageIndex++;
+            FillDatagrid(null, null);
+        }
+
+        private void btnLastPage_Click(object sender, RoutedEventArgs e)
+        {
+            _pageIndex = Convert.ToInt32(_totalPages);
+            FillDatagrid(null, null);
+        }
+
+        private void btnPreviousPage_Click(object sender, RoutedEventArgs e)
+        {
+            _pageIndex--;
+            FillDatagrid(null, null);
+        }
+
+        private void btnFirstPage_Click(object sender, RoutedEventArgs e)
+        {
+            _pageIndex = 1;
+            FillDatagrid(null, null);
+        }
+
+        private void cmbPaginationSize_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (!_listReport.Any())
+                return;
+            _pageIndex = 1;
+            FillDatagrid(null, null);
         }
     }
 }

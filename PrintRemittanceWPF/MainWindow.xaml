@@ -18,6 +18,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
                 <!--snackbar-->
@@ -163,6 +164,39 @@
                         </Grid>
                     </Grid>
 
+                </Grid>
+
+                <Grid x:Name="gridPagination" Grid.Row="2" IsEnabled="False" FlowDirection="LeftToRight">
+                    <StackPanel HorizontalAlignment="Left" Margin="5" Orientation="Horizontal">
+                        <Button x:Name="btnLastPage" Margin="10,0,0,0" Cursor="Hand" HorizontalAlignment="Left" Click="btnLastPage_Click"
+                                        Style="{DynamicResource MaterialDesignFlatButton}" Foreground="{DynamicResource MaterialDesignBody}">
+                            <materialDesign:PackIcon Kind="PageFirst" />
+                        </Button>
+
+                        <Button x:Name="btnNextPage" Margin="10,0,0,0" Cursor="Hand" Click="btnNextPage_Click" HorizontalAlignment="Left"
+                                        Style="{DynamicResource MaterialDesignFlatButton}" Foreground="{DynamicResource MaterialDesignBody}">
+                            <materialDesign:PackIcon Kind="LessThan" />
+                        </Button>
+
+                        <Button x:Name="btnPreviousPage" Margin="10,0,0,0" Cursor="Hand" Click="btnPreviousPage_Click" HorizontalAlignment="Left" 
+                                        Style="{DynamicResource MaterialDesignFlatButton}" Foreground="{DynamicResource MaterialDesignBody}">
+                            <materialDesign:PackIcon Kind="GreaterThan"/>
+                        </Button>
+
+                        <Button x:Name="btnFirstPage" Margin="10,0,0,0" Cursor="Hand" Click="btnFirstPage_Click" HorizontalAlignment="Left"
+                                        Style="{DynamicResource MaterialDesignFlatButton}" Foreground="{DynamicResource MaterialDesignBody}">
+                            <materialDesign:PackIcon Kind="PageLast" />
+                        </Button>
+
+                        <TextBlock x:Name="lblPageNumber" Foreground="{DynamicResource MaterialDesignBody}" 
+                                   Text="0 - 0" VerticalAlignment="Center" Margin="20,0,5,0"  FontSize="13"></TextBlock>
+                        <TextBlock Foreground="{DynamicResource MaterialDesignBody}" Text="از" VerticalAlignment="Center"  FontSize="13"></TextBlock>
+                        <TextBlock x:Name="lblTotalCount" Foreground="{DynamicResource MaterialDesignBody}"
+                                   Text="0" VerticalAlignment="Center" Margin="5,0,3,0"  FontSize="13"></TextBlock>
+
+                        <ComboBox x:Name="cmbPaginationSize" Foreground="{DynamicResource MaterialDesignBody}" Margin="25,0,20,0" SelectedValuePath="Value" VerticalAlignment="Center"
+                          DisplayMemberPath="Value" SelectedIndex="0" SelectionChanged="cmbPaginationSize_SelectionChanged"></ComboBox>
+                    </StackPanel>
                 </Grid>
             </Grid>
         </Border>
