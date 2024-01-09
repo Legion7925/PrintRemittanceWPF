@@ -16,6 +16,7 @@
     <None Remove="Resources\Fonts\samim-font-v4.0.5\Samim-Bold.ttf" />
     <None Remove="Resources\Fonts\samim-font-v4.0.5\Samim-Medium.ttf" />
     <None Remove="Resources\Fonts\samim-font-v4.0.5\Samim.ttf" />
+    <None Remove="Resources\Images\logo.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,6 +52,7 @@
     <Resource Include="Resources\Fonts\samim-font-v4.0.5\Samim-Bold.ttf" />
     <Resource Include="Resources\Fonts\samim-font-v4.0.5\Samim-Medium.ttf" />
     <Resource Include="Resources\Fonts\samim-font-v4.0.5\Samim.ttf" />
+    <Resource Include="Resources\Images\logo.png" />
   </ItemGroup>
 
   <ItemGroup>

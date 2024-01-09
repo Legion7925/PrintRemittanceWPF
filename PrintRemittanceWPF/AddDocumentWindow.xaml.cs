@@ -65,7 +65,7 @@ namespace PrintRemittanceWPF
                     PrintNumber = printNumber
 
                 };//todo add auto mapper if this happened again
-                PrintManager.PrintVisualV2(printModel);
+                PrintManager.PrintVisual(printModel);
                 btnPrintDocument.IsEnabled = true;
                 ClearInputs();
                 CartableEventsManager.OnUpdateDocumentsDatagrid();

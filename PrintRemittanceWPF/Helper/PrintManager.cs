@@ -35,7 +35,7 @@ public static class PrintManager
 
 
                 // Set the paper size to A6
-                printTicket.PageMediaSize = new PageMediaSize(297.36, 419.76);
+                printTicket.PageMediaSize = new PageMediaSize(PageMediaSizeName.ISOA7);
 
                 printDialog.PrintTicket = printTicket;
 
@@ -60,46 +60,54 @@ public static class PrintManager
 
     public static void PrintVisualV2(PrintDocumentModel document)
     {
-        // Create a PrintDialog to select a printer
-        PrintDialog printDialog = new PrintDialog();
-
-        if (printDialog.ShowDialog() == true)
+        try
         {
-            var userControl = new PrintUserControl(document);
-            // Get the selected printer and its printable area size
-            PrintQueue printQueue = printDialog.PrintQueue;
-            PrintCapabilities capabilities = printQueue.GetPrintCapabilities();
+            // Create a PrintDialog to select a printer
+            PrintDialog printDialog = new PrintDialog();
 
-            // Calculate the printable area size
-            double printableWidth = capabilities.PageImageableArea.ExtentWidth;
-            double printableHeight = capabilities.PageImageableArea.ExtentHeight;
+            if (printDialog.ShowDialog() == true)
+            {
+                var userControl = new PrintUserControl(document);
+                // Get the selected printer and its printable area size
+                PrintQueue printQueue = printDialog.PrintQueue;
+                PrintCapabilities capabilities = printQueue.GetPrintCapabilities();
 
-            // Create a FixedDocument for printing
-            FixedDocument fixedDocument = new FixedDocument();
-            fixedDocument.DocumentPaginator.PageSize = new Size(printableWidth, printableHeight);
+                // Calculate the printable area size
+                double printableWidth = capabilities.PageImageableArea.ExtentWidth;
+                double printableHeight = capabilities.PageImageableArea.ExtentHeight;
 
-            // Create a FixedPage for each page
-            FixedPage fixedPage = new FixedPage();
-            fixedPage.Width = printableWidth;
-            fixedPage.Height = printableHeight;
+                // Create a FixedDocument for printing
+                FixedDocument fixedDocument = new FixedDocument();
+                fixedDocument.DocumentPaginator.PageSize = new Size(printableWidth, printableHeight);
 
-            // Set margins for the content
-            double margin = 5;
-            double contentWidth = printableWidth - (2 * margin);
-            double contentHeight = printableHeight - (2 * margin);
+                // Create a FixedPage for each page
+                FixedPage fixedPage = new FixedPage();
+                fixedPage.Width = printableWidth;
+                fixedPage.Height = printableHeight;
 
-            // Set UserControl dimensions to fit within the content area
-            userControl.Width = contentWidth;
-            userControl.Height = contentHeight;
+                // Set margins for the content
+                double margin = 5;
+                double contentWidth = printableWidth - (2 * margin);
+                double contentHeight = printableHeight - (2 * margin);
 
-            // Add the UserControl to the FixedPage
-            fixedPage.Children.Add(userControl);
+                // Set UserControl dimensions to fit within the content area
+                userControl.Width = contentWidth;
+                userControl.Height = contentHeight;
 
-            // Add the FixedPage to the FixedDocument
-            fixedDocument.Pages.Add(new PageContent { Child = fixedPage });
+                // Add the UserControl to the FixedPage
+                fixedPage.Children.Add(userControl);
 
-            // Send the FixedDocument to the printer
-            printDialog.PrintDocument(fixedDocument.DocumentPaginator, "Printing UserControl");
+                // Add the FixedPage to the FixedDocument
+                fixedDocument.Pages.Add(new PageContent { Child = fixedPage });
+
+                // Send the FixedDocument to the printer
+                printDialog.PrintDocument(fixedDocument.DocumentPaginator, "Printing UserControl");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogException(ex);
+            NotificationEventsManager.OnShowMessage("در انجام عملیات پرینت خطایی رخ داده است", MessageTypeEnum.Error);
         }
     }
 }

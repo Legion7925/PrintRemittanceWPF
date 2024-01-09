@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              Height="419.76" Width="297.36" FontFamily=".././Resources/Fonts/samim-font-v4.0.5/Farsi-Digits/#Samim FD"
         FontSize="10" Background="White" VerticalAlignment="Center" HorizontalAlignment="Center">
-    <Grid Margin="10,15" VerticalAlignment="Center" HorizontalAlignment="Center">
+    <Grid Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
         <StackPanel>
             <Grid>
                 <Grid.ColumnDefinitions>

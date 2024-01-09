@@ -31,7 +31,7 @@ public partial class PrintUserControl : UserControl
     {
         BitmapImage myBitmapImage = new BitmapImage();
         myBitmapImage.BeginInit();
-        myBitmapImage.UriSource = new Uri(@"D:\RepoMohammad\Test\PrintRemittanceWPF\PrintRemittanceWPF\Resources\Images\logo.png");
+        myBitmapImage.UriSource = new Uri(@"pack://application:,,,/Resources/Images/logo.png");
         myBitmapImage.EndInit();
         logo.Source = myBitmapImage;
     }

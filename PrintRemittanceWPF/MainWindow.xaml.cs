@@ -144,7 +144,7 @@ namespace PrintRemittanceWPF
 
         private void btnPrintDocument_Click(object sender, RoutedEventArgs e)
         {
-            PrintManager.PrintVisualV2(new PrintDocumentModel
+            PrintManager.PrintVisual(new PrintDocumentModel
             {
                 CarName = selectedDocument.CarName,
                 CreatedDate = selectedDocument.CreatedDate,
