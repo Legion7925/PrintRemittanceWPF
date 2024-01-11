@@ -21,7 +21,7 @@ namespace PrintRemittanceWPF
         private int _pageSize = 5;
         private int _pageIndex = 1;
         private double _totalPages = 1;
-        private double _totalCount = 1;
+        private double _totalCount = 0;
 
         public MainWindow(IDocumentsRepository documentsRepository)
         {
@@ -30,43 +30,25 @@ namespace PrintRemittanceWPF
             dpFilterStart.SelectedDate = Mohsen.PersianDate.Today.AddDays(-3);
             dpFilterEnd.SelectedDate = Mohsen.PersianDate.Today;
 
-            CartableEventsManager.updateDocuments += GetReport;
+            CartableEventsManager.updateDocuments += btnReportRemitance_Click!;
             NotificationEventsManager.showMessage += ShowSnackbarMessage;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            GetReport(null!, null!);
+            FillPaginationComboBox();
+            btnReportRemitance_Click(null!, null!);
         }
 
-        private async Task GetCountReport()
-        {
-            try
-            {
-                _totalCount = await documentsRepository.GetDocumentsCountAsync();
-                if (_totalCount == 0)
-                {
-                    ShowSnackbarMessage("داده ای برای نمایش وجود ندارد", MessageTypeEnum.Information);
-                    dgReport.ItemsSource = null;
-                    return;
-                }
-                btnFirstPage_Click(null!, null!);
-            }
-            catch (Exception ex)
-            {
-                ShowSnackbarMessage("در واکشی تعداد گزارش خطایی رخ داده است", MessageTypeEnum.Error);
-                Logger.LogException(ex);
-            }
-        }
 
-        private void FillDatagrid(object? sender, EventArgs? e)
+        private async void FillDatagrid(object? sender, EventArgs? e)
         {
             _pageSize = Convert.ToInt32(cmbPaginationSize.SelectedValue);
             _totalPages = Math.Ceiling(_totalCount / _pageSize);
             if (_totalPages == 0)
                 _totalPages = 1;
 
-            GetReport(null!, null!);
+             GetPagination();
 
             if (_totalCount == 0)
             {
@@ -104,7 +86,7 @@ namespace PrintRemittanceWPF
             dgReport.ItemsSource = _listReport;
         }
 
-        private async void GetReport(object? sender, RoutedEventArgs e)
+        private async void GetPagination()
         {
             try
             {
@@ -112,15 +94,10 @@ namespace PrintRemittanceWPF
                 {
                     StartDate = dpFilterStart.SelectedDate.ToDateTime(),
                     EndDate = dpFilterEnd.SelectedDate.ToDateTime(),
-                    Destination = txtDestination.Text
-                    //todo take skip pagination
+                    Destination = txtDestination.Text,
+                    Page = _pageIndex,
+                    Size = _pageSize
                 });
-                if (_listReport.Any() is not true)
-                {
-                    ShowSnackbarMessage("داده ای برای نمایش وجود ندارد", MessageTypeEnum.Information);
-                    dgReport.ItemsSource = null;
-                    return;
-                }
                 dgReport.ItemsSource = _listReport;
 
             }
@@ -131,9 +108,27 @@ namespace PrintRemittanceWPF
             }
         }
 
-        private void btnReportRemitance_Click(object sender, RoutedEventArgs e)
+
+        private async void btnReportRemitance_Click(object sender, RoutedEventArgs e)
         {
-            GetReport(null, null!);
+            try
+            {
+                _totalCount = await documentsRepository.GetDocumentsCountAsync();
+                if (_totalCount == 0)
+                {
+                    ShowSnackbarMessage("داده ای برای نمایش وجود ندارد", MessageTypeEnum.Information);
+                    dgReport.ItemsSource = null;
+                    return;
+                }
+                btnFirstPage_Click(null!, null!);
+                FillDatagrid(null!, null!);
+                gridPagination.IsEnabled = true;
+            }
+            catch (Exception ex)
+            {
+                ShowSnackbarMessage("در واکشی تعداد گزارش خطایی رخ داده است", MessageTypeEnum.Error);
+                Logger.LogException(ex);
+            }
         }
 
         private void btnAddDocument_Click(object sender, RoutedEventArgs e)
@@ -172,7 +167,7 @@ namespace PrintRemittanceWPF
         private void btnReportRemoveFilter_Click(object sender, RoutedEventArgs e)
         {
             txtDestination.Text = string.Empty;
-            GetReport(null!, null!);
+            btnReportRemitance_Click(null!, null!);
         }
 
         private void btnDeleteRemitance_Click(object sender, RoutedEventArgs e)
@@ -209,7 +204,7 @@ namespace PrintRemittanceWPF
         {
             if (e.Key == System.Windows.Input.Key.Enter)
             {
-                GetReport(null, null!);
+                btnReportRemitance_Click(null!, null!);
             }
         }
 
@@ -263,6 +258,17 @@ namespace PrintRemittanceWPF
                 return;
             _pageIndex = 1;
             FillDatagrid(null, null);
+        }
+
+        private void FillPaginationComboBox()
+        {
+            Dictionary<int, string> paginationSizeValuePairs = new Dictionary<int, string>
+            {
+                { 0, "10" },
+                { 1, "20" },
+                { 2, "30" }
+            };
+            cmbPaginationSize.ItemsSource = paginationSizeValuePairs;
         }
     }
 }
