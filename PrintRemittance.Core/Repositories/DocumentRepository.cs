@@ -54,12 +54,18 @@ public class DocumentRepository : IDocumentsRepository
         return await _context.Documents.FirstOrDefaultAsync(d => d.Id == documentId);
     }
 
-    public async Task<int> GetDocumentsCountAsync()
+    public int GetDocumentsCount(GetDocumentsQueryParameter filter)
     {
-        return await _context.Documents.CountAsync();
+        if (filter.Destination is null)
+        {
+            filter.Destination = string.Empty;
+        }
+
+        return _context.Documents.AsNoTracking().Where(r => r.CreatedDate.Date >= filter.StartDate.Date
+            && r.CreatedDate.Date <= filter.EndDate.Date && (r.Destination.ToLower()).Contains(filter.Destination.ToLower())).Count();
     }
 
-    public async Task<IEnumerable<DocumentsResultModel>> GetDocumentsAsync(GetDocumentsQueryParameter filter)
+    public IEnumerable<DocumentsResultModel> GetDocuments(GetDocumentsQueryParameter filter)
     {
         var documents = _context.Documents.AsNoTracking().Where(r => r.CreatedDate.Date >= filter.StartDate.Date
             && r.CreatedDate.Date <= filter.EndDate.Date);
@@ -69,10 +75,10 @@ public class DocumentRepository : IDocumentsRepository
             documents = documents.Where(d => (d.Destination.ToLower()).Contains(filter.Destination.ToLower()));
         }
 
-        documents.Skip((filter.Page - 1) * filter.Size)
+        documents = documents.Skip((filter.Page - 1) * filter.Size)
             .Take(filter.Size);
 
-        var documentsResult = await documents.Select(d => new DocumentsResultModel
+        var documentsResult = documents.Select(d => new DocumentsResultModel
         {
             CarName = d.CarName,
             CreatedDate = d.CreatedDate,
@@ -83,11 +89,11 @@ public class DocumentRepository : IDocumentsRepository
             PrintNumber = d.PrintNumber,
             Product = d.Product,
             PlateNumber = d.PlateNumber,
-        }).ToListAsync();
+        }).ToList();
 
         for (int i = 0; i < documents.Count(); i++)
         {
-            documentsResult[i].RowNumber = i+1;
+            documentsResult[i].RowNumber = i + 1 + ((filter.Page - 1) * filter.Size); ;
         }
 
         return documentsResult;

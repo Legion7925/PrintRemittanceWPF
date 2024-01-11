@@ -18,7 +18,7 @@ namespace PrintRemittanceWPF
 
         private DocumentsResultModel selectedDocument = new();
 
-        private int _pageSize = 5;
+        private int _pageSize = 2;
         private int _pageIndex = 1;
         private double _totalPages = 1;
         private double _totalCount = 0;
@@ -41,14 +41,14 @@ namespace PrintRemittanceWPF
         }
 
 
-        private async void FillDatagrid(object? sender, EventArgs? e)
+        private void FillDatagrid(object? sender, EventArgs? e)
         {
             _pageSize = Convert.ToInt32(cmbPaginationSize.SelectedValue);
             _totalPages = Math.Ceiling(_totalCount / _pageSize);
             if (_totalPages == 0)
                 _totalPages = 1;
 
-             GetPagination();
+            GetPaginatedResult();
 
             if (_totalCount == 0)
             {
@@ -86,11 +86,11 @@ namespace PrintRemittanceWPF
             dgReport.ItemsSource = _listReport;
         }
 
-        private async void GetPagination()
+        private void GetPaginatedResult()
         {
             try
             {
-                _listReport = await documentsRepository.GetDocumentsAsync(new GetDocumentsQueryParameter
+                _listReport =  documentsRepository.GetDocuments(new GetDocumentsQueryParameter
                 {
                     StartDate = dpFilterStart.SelectedDate.ToDateTime(),
                     EndDate = dpFilterEnd.SelectedDate.ToDateTime(),
@@ -109,18 +109,23 @@ namespace PrintRemittanceWPF
         }
 
 
-        private async void btnReportRemitance_Click(object sender, RoutedEventArgs e)
+        private void btnReportRemitance_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                _totalCount = await documentsRepository.GetDocumentsCountAsync();
+                _totalCount = documentsRepository.GetDocumentsCount(new GetDocumentsQueryParameter
+                {
+                    StartDate = dpFilterStart.SelectedDate.ToDateTime(),
+                    EndDate = dpFilterEnd.SelectedDate.ToDateTime(),
+                    Destination = txtDestination.Text,
+                });
                 if (_totalCount == 0)
                 {
                     ShowSnackbarMessage("داده ای برای نمایش وجود ندارد", MessageTypeEnum.Information);
                     dgReport.ItemsSource = null;
                     return;
                 }
-                btnFirstPage_Click(null!, null!);
+                _pageIndex = 1;
                 FillDatagrid(null!, null!);
                 gridPagination.IsEnabled = true;
             }

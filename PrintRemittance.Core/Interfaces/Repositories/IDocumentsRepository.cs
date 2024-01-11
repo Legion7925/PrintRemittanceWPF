@@ -5,8 +5,8 @@ namespace PrintRemittance.Core.Interfaces.Repositories;
 
 public interface IDocumentsRepository
 {
-    Task<IEnumerable<DocumentsResultModel>> GetDocumentsAsync(GetDocumentsQueryParameter filter);
-    Task<int> GetDocumentsCountAsync();
+    IEnumerable<DocumentsResultModel> GetDocuments(GetDocumentsQueryParameter filter);
+    int GetDocumentsCount(GetDocumentsQueryParameter filter);
     Task<string> AddDocument(AddDocumentModel document);
     Task DeleteDocument(Guid documentId);
 }
